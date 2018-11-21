@@ -11,34 +11,27 @@ class Timer extends React.Component {
     constructor (props){
         super (props)
             this.state = {
-                timer:500000,
-                isclicked:false,
-                start:0
+                timer:500000,   
             }
-         
              this.start = this.start.bind(this)   
              this.resetTimer = this.resetTimer.bind(this)      
              this.pause = this.pause.bind(this)  
     }
     start(){
-     
-   
-        if(this.state.isclicked===true ) {
-            
-            return 
-    }
-
-        else{
-        setInterval(
-            ()=> {
-                this.setState({
-                    timer:this.state.timer+1000,
-                    isclicked:true,
-                    start:this.start+1
-                })
-            },1000
+        if(this.state.interval) {
+            return
+        }
+        const interval = setInterval(
+            () => {
+               this.setState({
+                   timer: this.state.timer + 1000
+               }) 
+            },
+            1000
         )
-    }
+        this.setState({
+            interval: interval
+        })
     }
 
 
@@ -46,10 +39,14 @@ class Timer extends React.Component {
         this.setState({timer: 0})
       }
       pause () {
-
-        
-      }
-
+        if(!this.state.interval) {
+            return
+        }
+        clearInterval(this.state.interval)
+        this.setState({
+            interval: undefined
+        })
+    }
 
 render () {
 
@@ -57,8 +54,11 @@ render () {
     
     <Transform obj = {this.state.timer}/>
     <div className="grp-button d-flex flex-column align-items-center justify-content-center">
-        <button type="button" className="btn btn-outline-primary  p-2 mb-4" onClick={() =>{this.start()}} >Start</button>
-        <button type="button" className="btn btn-outline-danger" onClick={() =>{this.resetTimer()}}>resetTimer</button></div>
+        <button type="button" className="btn btn-outline-primary m-3" onClick={() => {
+   this.start();
+   this.pause();
+}}>Start</button>
+        <button type="button" className="btn btn-outline-danger" onClick={() =>{this.resetTimer(); this.pause();}}>resetTimer</button></div>
    );
      </div>
      )
